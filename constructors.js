@@ -117,6 +117,17 @@ Spellcaster.prototype.inflictDamage = function(damage){
    * @return {boolean} success  Whether mana was successfully spent.
    */
 
+   Spellcaster.prototype.spendMana = function(cost){
+       if(this.mana >= cost){
+        this.mana -= cost;
+        return true;
+       }
+       else{
+           console.log("Not enough mana to spend.");
+           return false;
+       }
+   }
+
   /**
    * @method invoke
    *
