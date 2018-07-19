@@ -98,6 +98,7 @@ DamageSpell.prototype.constructor = DamageSpell;
 
 Spellcaster.prototype.inflictDamage = function(damage){
     this.health -= damage;
+    
     if(this.health < 0){
         this.health = 0;
         this.isAlive = false;
@@ -154,3 +155,58 @@ Spellcaster.prototype.inflictDamage = function(damage){
    * @param  {Spellcaster} target         The spell target to be inflicted.
    * @return {boolean}                    Whether the spell was successfully cast.
    */
+
+Spellcaster.prototype.invoke = function(spell, target){
+    console.log(spell);
+    console.log(target);
+
+    //If first parameter is a DamageSpell
+    if(spell instanceof DamageSpell){
+        
+        //If 2nd param is a Spellcaster
+        if(target instanceof Spellcaster){
+            console.log("initial mana: " + target.mana);
+            console.log("initial health: " + target.health);
+            console.log("Spell cost: " + spell.cost);
+            console.log("Spell damage: " + spell.damage);
+
+            //If spellcaster has enough mana
+            if(this.spendMana(spell.cost) === true){
+                // this.spendMana(spell.cost);
+                target.inflictDamage(spell.damage);
+                console.log("Leftover mana: " + target.mana);
+                console.log("Leftover health: " + target.health);
+                return true;
+            }
+            //Else spellcaster doesn't have enough mana
+            else if(this.spendMana(spell.cost) === false){
+                return false;
+            }
+        }
+        //Else 2nd param is not a Spellcaster, return false
+        else{
+            return false;
+        }
+    }
+    //Else 1st param is not a DamageSpell
+    else if(spell instanceof Spell){
+        console.log("initial mana: " + this.mana);
+        console.log("Spell cost: " + spell.cost);
+
+        //If have enough mana
+        if(this.spendMana(spell.cost) === true){
+            this.spendMana(spell.cost);
+            console.log("Leftover mana: " + this.mana);
+            return true;
+        }
+        //Else doesn't have enough mana
+        else if(this.spendMana(spell.cost) === false){
+            return false;
+        }
+    }
+    
+    else if(!spell){
+        return false;
+    }
+
+}
